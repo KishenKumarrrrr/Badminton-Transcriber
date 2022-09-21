@@ -1,0 +1,8 @@
+.courtButton {
+    width: 100px;
+}
+
+.courtSection {
+    display: flex;
+    justify-content: center;
+}

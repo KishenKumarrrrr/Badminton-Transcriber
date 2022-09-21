@@ -1,0 +1,6 @@
+.scrollable-container {
+    height: 200px;
+    overflow-y: scroll;
+    overflow-wrap: anywhere;
+    width: 100%;
+}
