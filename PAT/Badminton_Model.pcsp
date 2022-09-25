@@ -1,4 +1,3 @@
-PAT Code
 //       *****
 // Player1: LKY
 // |-|---------|---------|-|    (13) Error
@@ -20,8 +19,8 @@ PAT Code
 // Player2: Lakshya
 //       *****
 
-enum {lky_left_serve, lky_right_serve, lak_left_serve, lak_right_serve} //serve position: left court and right court
-enum {player1, player2, na}
+enum {lky_left_serve, lky_right_serve, lak_left_serve, lak_right_serve}; //serve position: left court and right court
+enum {player1, player2, na};
 
 var turn = na; // serve turn;
 var lky_score = 0;
@@ -32,7 +31,7 @@ var shuttle = 13; // Starting position at Error
 TieBreakGame = WhoServe1st; (Player1Serve [] Player2Serve);
 
 WhoServe1st = []i:{lky_right_serve,lak_right_serve}@ TossCoin{turn = i} -> Skip;
-Player1Serve = [won == na && turn == lky_right_serve ]LKYReady_right -> ply1_r_serve [] [won == na && turn == lky_left_serve] LKYReady_left -> ply1_l_serve;
+Player1Serve = [won == na && turn == lky_right_serve]LKYReady_right -> ply1_r_serve [] [won == na && turn == lky_left_serve] LKYReady_left -> ply1_l_serve;
 
 ply1_l_serve = pcase {                             
 			0: Serve_narrow{shuttle=9} -> ply2_forehand_r  
@@ -47,7 +46,7 @@ ply1_r_serve = pcase {
 			0: Serve_body{shuttle=10} -> (ply2_backhand_r [] ply2_forehand_r)
 			0: Serve_err{shuttle=13} -> ply1_err}; //Calculate score and serve system
 
-Player2Serve = [won == na && turn == lak_right_serve]LAKReady_right -> ply2_r_serve [] [ won == na && turn == lak_left_serve] LAKReady_left -> ply2_l_serve;
+Player2Serve = [won == na && turn == lak_right_serve] LAKReady_right -> ply2_r_serve [] [won == na && turn == lak_left_serve] LAKReady_left -> ply2_l_serve;
 
 ply2_l_serve = pcase {                             
 			0: Serve_narrow{shuttle=3} -> ply1_forehand_r  
@@ -55,15 +54,13 @@ ply2_l_serve = pcase {
 			0: Serve_body{shuttle=3} -> (ply1_backhand_r [] ply1_forehand_r)
 			0: Serve_err{shuttle=13} -> ply2_err}; //Calculate score and serve system
 
-
 ply2_r_serve = pcase {                             
 			0: Serve_narrow{shuttle=4} -> ply1_forehand_r  
 			0: Serve_wide{shuttle=4} -> ply1_backhand_r 
 			0: Serve_body{shuttle=4} -> (ply1_backhand_r [] ply1_forehand_r)
 			0: Serve_err{shuttle=13} -> ply2_err}; //Calculate score and serve system
 
-ply1_bl_stroke = {
-    pcase {                             
+ply1_bl_stroke = pcase {                             
 			0: FH_straight_back{shuttle=11} -> ply2_br_stroke
 			0: FH_straight_mid{shuttle=9} ->  ply2_mr_stroke
 			0: FH_straight_front{shuttle=7} -> ply2_fr_stroke
@@ -77,10 +74,8 @@ ply1_bl_stroke = {
             0: BH_cross_mid{shuttle=10} -> ply2_ml_stroke
             0: BH_cross_front{shuttle=8}-> ply2_fl_stroke
 			0: error{shuttle=13} -> ply1_err}; //Calculate score and serve system
-}
 
-ply1_ml_stroke = {
-    pcase {                             
+ply1_ml_stroke = pcase {                             
 			0: FH_straight_back{shuttle=11} -> ply2_br_stroke
 			0: FH_straight_mid{shuttle=9} ->  ply2_mr_stroke
 			0: FH_straight_front{shuttle=7} -> ply2_fr_stroke
@@ -94,10 +89,8 @@ ply1_ml_stroke = {
             0: BH_cross_mid{shuttle=10} -> ply2_ml_stroke
             0: BH_cross_front{shuttle=8}-> ply2_fl_stroke
 			0: error{shuttle=13} -> ply1_err}; //Calculate score and serve system
-}
 
-ply1_fl_stroke = {
-    pcase {                             
+ply1_fl_stroke = pcase {                             
 			0: FH_straight_back{shuttle=11} -> ply2_br_stroke
 			0: FH_straight_mid{shuttle=9} ->  ply2_mr_stroke
 			0: FH_straight_front{shuttle=7} -> ply2_fr_stroke
@@ -111,10 +104,8 @@ ply1_fl_stroke = {
             0: BH_cross_mid{shuttle=10} -> ply2_ml_stroke
             0: BH_cross_front{shuttle=8}-> ply2_fl_stroke
 			0: error{shuttle=13} -> ply1_err}; //Calculate score and serve system
-}
 
-ply1_br_stroke = {
-    pcase {                             
+ply1_br_stroke = pcase {                             
 			0: FH_straight_back{shuttle=12} -> ply2_bl_stroke
 			0: FH_straight_mid{shuttle=10} ->  ply2_ml_stroke
 			0: FH_straight_front{shuttle=8} -> ply2_fl_stroke
@@ -128,10 +119,8 @@ ply1_br_stroke = {
             0: BH_cross_mid{shuttle=9} -> ply2_mr_stroke
             0: BH_cross_front{shuttle=7} -> ply2_fr_stroke
 			0: error{shuttle=13} -> ply1_err}; //Calculate score and serve system
-}
 
-ply1_mr_stroke = {
-    pcase {                             
+ply1_mr_stroke = pcase {                             
 			0: FH_straight_back{shuttle=12} -> ply2_bl_stroke
 			0: FH_straight_mid{shuttle=10} ->  ply2_ml_stroke
 			0: FH_straight_front{shuttle=8} -> ply2_fl_stroke
@@ -145,10 +134,8 @@ ply1_mr_stroke = {
             0: BH_cross_mid{shuttle=9} -> ply2_mr_stroke
             0: BH_cross_front{shuttle=7} -> ply2_fr_stroke
 			0: error{shuttle=13} -> ply1_err}; //Calculate score and serve system
-}
 
-ply1_fr_stroke = {
-    pcase {                             
+ply1_fr_stroke = pcase {                             
 			0: FH_straight_back{shuttle=12} -> ply2_bl_stroke
 			0: FH_straight_mid{shuttle=10} ->  ply2_ml_stroke
 			0: FH_straight_front{shuttle=8} -> ply2_fl_stroke
@@ -162,10 +149,8 @@ ply1_fr_stroke = {
             0: BH_cross_mid{shuttle=9} -> ply2_mr_stroke
             0: BH_cross_front{shuttle=7} -> ply2_fr_stroke
 			0: error{shuttle=13} -> ply1_err}; //Calculate score and serve system
-}
 
-ply2_bl_stroke = {
-    pcase {                             
+ply2_bl_stroke = pcase {                             
 			0: FH_straight_back{shuttle=2} -> ply1_br_stroke
 			0: FH_straight_mid{shuttle=4} ->  ply1_mr_stroke
 			0: FH_straight_front{shuttle=6} -> ply1_fr_stroke
@@ -179,10 +164,8 @@ ply2_bl_stroke = {
             0: BH_cross_mid{shuttle=3} -> ply1_ml_stroke
             0: BH_cross_front{shuttle=5}-> ply1_fl_stroke
 			0: error{shuttle=13} -> ply2_err}; //Calculate score and serve system
-}
 
-ply2_ml_stroke = {
-    pcase {                             
+ply2_ml_stroke = pcase {                             
 			0: FH_straight_back{shuttle=2} -> ply1_br_stroke
 			0: FH_straight_mid{shuttle=4} ->  ply1_mr_stroke
 			0: FH_straight_front{shuttle=6} -> ply1_fr_stroke
@@ -196,9 +179,8 @@ ply2_ml_stroke = {
             0: BH_cross_mid{shuttle=3} -> ply1_ml_stroke
             0: BH_cross_front{shuttle=5}-> ply1_fl_stroke
 			0: error{shuttle=13} ->ply2_err }; //Calculate score and serve system
-}
-ply2_fl_stroke = {
-    pcase {                             
+			
+ply2_fl_stroke = pcase {                             
 			0: FH_straight_back{shuttle=2} -> ply1_br_stroke
 			0: FH_straight_mid{shuttle=4} ->  ply1_mr_stroke
 			0: FH_straight_front{shuttle=6} -> ply1_fr_stroke
@@ -212,9 +194,8 @@ ply2_fl_stroke = {
             0: BH_cross_mid{shuttle=3} -> ply1_ml_stroke
             0: BH_cross_front{shuttle=5}-> ply1_fl_stroke
 			0: error{shuttle=13} ->ply2_err }; //Calculate score and serve system
-}
-ply2_br_stroke = {
-    pcase {                             
+
+ply2_br_stroke = pcase {                             
 			0: FH_straight_back{shuttle=1} -> ply1_bl_stroke
 			0: FH_straight_mid{shuttle=3} ->  ply1_ml_stroke
 			0: FH_straight_front{shuttle=5} -> ply1_fl_stroke
@@ -228,9 +209,8 @@ ply2_br_stroke = {
             0: BH_cross_mid{shuttle=4} -> ply1_mr_stroke
             0: BH_cross_front{shuttle=6}-> ply1_fr_stroke
 			0: error{shuttle=13} -> ply2_err}; //Calculate score and serve system
-}
-ply2_mr_stroke = {
-    pcase {                             
+
+ply2_mr_stroke = pcase {                             
 			0: FH_straight_back{shuttle=1} -> ply1_bl_stroke
 			0: FH_straight_mid{shuttle=3} ->  ply1_ml_stroke
 			0: FH_straight_front{shuttle=5} -> ply1_fl_stroke
@@ -244,9 +224,8 @@ ply2_mr_stroke = {
             0: BH_cross_mid{shuttle=4} -> ply1_mr_stroke
             0: BH_cross_front{shuttle=6}-> ply1_fr_stroke
 			0: error{shuttle=13} -> ply2_err}; //Calculate score and serve system
-}
-ply2_fr_stroke = {
-    pcase {                             
+
+ply2_fr_stroke = pcase {                             
         0: FH_straight_back{shuttle=1} -> ply1_bl_stroke
         0: FH_straight_mid{shuttle=3} ->  ply1_ml_stroke
         0: FH_straight_front{shuttle=5} -> ply1_fl_stroke
@@ -259,9 +238,7 @@ ply2_fr_stroke = {
         0: BH_cross_back{shuttle=2} -> ply1_br_stroke
         0: BH_cross_mid{shuttle=4} -> ply1_mr_stroke
         0: BH_cross_front{shuttle=6}-> ply1_fr_stroke
-        0: error{shuttle=13} -> ply2_err
-    }; // Calculate score and serve system
-}
+        0: error{shuttle=13} -> ply2_err}; // Calculate score and serve system
 
 ply1_forehand_r = ifa(turn == lak_left_serve) {
     pcase {
@@ -272,7 +249,7 @@ ply1_forehand_r = ifa(turn == lak_left_serve) {
         0: FH_cross_mid{shuttle=10} -> ply2_ml_stroke
         0: FH_cross_front{shuttle=8} -> ply2_fl_stroke
         0: error{shuttle=13} -> ply1_err
-    };
+    }
 } else {
     pcase {
         0: FH_straight_back{shuttle=12} -> ply2_bl_stroke
@@ -282,8 +259,8 @@ ply1_forehand_r = ifa(turn == lak_left_serve) {
         0: FH_cross_mid{shuttle=9} -> ply2_mr_stroke
         0: FH_cross_front{shuttle=7} -> ply2_fr_stroke
         0: error{shuttle=13} -> ply1_err
-    };
-}
+    }
+};
 
 ply1_backhand_r = ifa(turn == lak_left_serve) {
     pcase {
@@ -294,7 +271,7 @@ ply1_backhand_r = ifa(turn == lak_left_serve) {
         0: BH_cross_mid{shuttle=10} -> ply2_ml_stroke
         0: BH_cross_front{shuttle=8}-> ply2_fl_stroke
         0: error{shuttle=13} -> ply1_err
-    };
+    }
 } else {
     pcase {
         0: BH_straight_back{shuttle=12} -> ply2_bl_stroke
@@ -304,8 +281,8 @@ ply1_backhand_r = ifa(turn == lak_left_serve) {
         0: BH_cross_mid{shuttle=9} -> ply2_mr_stroke
         0: BH_cross_front{shuttle=7} -> ply2_fr_stroke
         0: error{shuttle=13} -> ply1_err
-    };
-}
+    }
+};
 
 ply2_forehand_r = ifa(turn == lky_left_serve) {
     pcase {
@@ -316,7 +293,7 @@ ply2_forehand_r = ifa(turn == lky_left_serve) {
         0: FH_cross_mid{shuttle=3} -> ply1_ml_stroke
         0: FH_cross_front{shuttle=5} -> ply1_fl_stroke
         0: error{shuttle=13} -> ply2_err
-    };
+    }
 } else {
     pcase {
         0: FH_straight_back{shuttle=1} -> ply1_bl_stroke
@@ -326,8 +303,8 @@ ply2_forehand_r = ifa(turn == lky_left_serve) {
         0: FH_cross_mid{shuttle=4} -> ply1_mr_stroke
         0: FH_cross_front{shuttle=6} -> ply1_fr_stroke
         0: error{shuttle=13} -> ply2_err
-    };
-}
+    }
+};
 
 ply2_backhand_r = ifa(turn == lky_left_serve) {
     pcase {
@@ -338,7 +315,7 @@ ply2_backhand_r = ifa(turn == lky_left_serve) {
         0: BH_cross_mid{shuttle=3} -> ply1_ml_stroke
         0: BH_cross_front{shuttle=5}-> ply1_fl_stroke
         0: error{shuttle=13} ->ply2_err
-    };
+    }
 } else {
     pcase {
         0: BH_straight_back{shuttle=1} -> ply1_bl_stroke
@@ -348,27 +325,28 @@ ply2_backhand_r = ifa(turn == lky_left_serve) {
         0: BH_cross_mid{shuttle=4} -> ply1_mr_stroke
         0: BH_cross_front{shuttle=6}-> ply1_fr_stroke
         0: error{shuttle=13} -> ply2_err
-    };
-}
+    }
+};
 
 NextPt = Player1Serve [] Player2Serve [] ([won != na] GameOver -> Skip);
 
-ply1_err = lak_score++; if(lak_score == 30 || (lak_score >= 21 && lak_score - lky_score >= 2)){
+ply1_err = {lak_score++;} -> {if(lak_score == 30 || (lak_score >= 21 && lak_score - lky_score >= 2)) {
     won = player2
+} else if(lak_score % 2 == 0) { // Even Score
+    turn = lak_right_serve
 } else {
-    if(lak_score % 2 == 0) { // Even Score
-        turn = lak_right_serve
-    } else {
-        turn = lak_left_serve
-    }
-} -> NextPt
+    turn = lak_left_serve
+}} -> NextPt;
 
-ply2_err = lky_score++; if(lky_score == 30 || (lky_score >= 21 && lky_score - lak_score >= 2)){
+ply2_err = {lky_score++;} -> {if(lky_score == 30 || (lky_score >= 21 && lky_score - lak_score >= 2)) {
     won = player1
+} else if(lky_score % 2 == 0) { // Even Score
+	turn = lky_right_serve
 } else {
-    if(lky_score % 2 == 0) { // Even Score
-        turn = lky_right_serve
-    } else {
-        turn = lky_left_serve
-    }
-} -> NextPt
+	turn = lky_left_serve
+}} -> NextPt;
+
+#define player1Win won == player1;
+#define player2Win won == player2;
+#assert TieBreakGame reaches player1Win;
+#assert TieBreakGame reaches player2Win;
