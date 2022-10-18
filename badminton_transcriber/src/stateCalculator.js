@@ -17,7 +17,15 @@ const AD_F = "ad_f"
 const AD_M = "ad_m"
 const AD_R = "ad_r"
 
-export default function getState(playerPosition, action, resultPosition) {
+const CROSS_SHORT = 'cs'
+const CROSS_MID = 'cm'
+const CROSS_DEEP = 'cd'
+const DOWN_SHORT = 'ds'
+const DOWN_MID = 'dm'
+const DOWN_DEEP = 'dd'
+
+
+export function getState(playerPosition, action, resultPosition) {
     if (action === ERROR) {
         return `(${playerPosition, action})`
     }
@@ -53,7 +61,45 @@ function getResultPosition(resultPosition) {
             return "5"
         case AD_F:
             return "6"
-
     }
 
+}
+
+export function getServeDefState(servePosition, serveDefAction, serveDefResult) {
+    const ballPos = getBallPos(servePosition, serveDefResult)
+    return `(s_def, ${servePosition}, ${serveDefAction}, ${ballPos})`
+}
+
+function getBallPos(servePosition, serveDefResult) {
+    if (servePosition === 'de') {
+        switch (serveDefResult) {
+            case CROSS_SHORT:
+                return "6"
+            case CROSS_MID:
+                return "4"
+            case CROSS_DEEP:
+                return "2"
+            case DOWN_SHORT:
+                return "5"
+            case DOWN_MID:
+                return "3"
+            case DOWN_DEEP:
+                return "1"
+        }
+    } else {
+        switch (serveDefResult) {
+            case CROSS_SHORT:
+                return "5"
+            case CROSS_MID:
+                return "3"
+            case CROSS_DEEP:
+                return "1"
+            case DOWN_SHORT:
+                return "6"
+            case DOWN_MID:
+                return "4"
+            case DOWN_DEEP:
+                return "2"
+        }
+    }
 }

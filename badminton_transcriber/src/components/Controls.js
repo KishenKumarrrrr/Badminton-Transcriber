@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react"
-import { Row, Col, Button, Divider, Typography, Space, Steps} from "antd"
+import { Row, Col, Button, Divider, Typography, Space, Steps, message} from "antd"
 import ButtonGroup from "antd/lib/button/button-group";
 import styles from "./Controls.css"
-import getState from "../stateCalculator";
+import { getState, getServeDefState } from "../stateCalculator";
+import ServeButtons from "./ServeButtons";
 
 function Controls(props) {
 
@@ -30,12 +31,48 @@ function Controls(props) {
     const [playerTwoSet, setPlayerTwoSet] = useState(0);
     const [disableButtons, setDisableButtons] = useState(false)
 
+    const [serveType, setServeType] = useState();
+    const [servePosition, setServePosition] = useState();
+    const [serveAttDirection, setServeAttDirection] = useState();
+    const [serveDefAction, setServeDefAction] = useState();
+    const [serveDefResult, setServeDefResult] = useState();
+
+
+    function processServe() {
+        const isValidAttackServe = serveType === 's_att' && servePosition !== undefined && serveAttDirection != undefined;
+        const isValidDefServe = serveType === 's_def' && ((serveDefAction !== undefined && serveDefResult !== undefined) || (serveDefAction === 'error'))
+
+        if (isValidAttackServe && isValidDefServe) {
+            message.error("Both serve states detected. Please click 'clear' and try again");
+            return
+        }
+
+        if (isValidAttackServe) {
+            const serveAtTuple = `(${serveType}, ${servePosition}, ${serveAttDirection})`
+            setPointState(`${pointState}${pointState === "" ? "" : ","}${serveAtTuple}`)
+            clearTuple()
+            message.success("Attacking serve added to point")
+        } else {
+            const serveDefTuple = getServeDefState(servePosition, serveDefAction, serveDefResult)
+            setPointState(`${pointState}${pointState === "" ? "" : ","}${serveDefTuple}`)
+            clearTuple()
+            message.success("Defending serve added to point")
+        }
+
+    }
+
+
     function clearTuple() {
         setCameraNearPos("")
         setCameraOppPos("")
         setProgress(null)
         setStatus("wait")
         setPlayerAction("none")
+        setServeType()
+        setServePosition()
+        setServeAttDirection()
+        setServeDefAction()
+        setServeDefResult()
     }
 
     function commitMove() {
@@ -49,6 +86,7 @@ function Controls(props) {
 
         setPointState(`${pointState}${pointState === "" ? "" : ","}${MOVE_TUPLE}`)
         clearTuple()
+        message.success("Action added to point")
     }
 
     function addPoint() {
@@ -56,10 +94,14 @@ function Controls(props) {
         setGameState(`${gameState}\n${POINT_MESSAGE}`)
         setPointState("")
         clearTuple()
+        message.success("Point added")
     }
 
     function addSet() {
-        if (scoreOne === scoreTwo) return
+        if (scoreOne === scoreTwo) {
+            message.error("Can't add a set if the scores are equal")
+            return
+        }
         if (scoreOne > scoreTwo) {
             setPlayerOneSet(playerOneSet + 1);
         } else {
@@ -67,6 +109,7 @@ function Controls(props) {
         }
         const SET_ENDED_MESSAGE = `END OF SET. SET SCORE: ${playerOneSet} - ${playerTwoSet}\n`
         setGameState(`${gameState}\n ${SET_ENDED_MESSAGE}`)
+        message.success("Set added")
         clearTuple();
     }
 
@@ -96,23 +139,32 @@ function Controls(props) {
     return (
         <>
             <Row>
-                <Space direction="vertical">
-                    <Typography.Title>Serve</Typography.Title>
-                    <h1>Add Buttons</h1>
-                </Space>
-                <Divider type="vertical"/>
-                <Space direction="vertical">
-                    <Typography.Title>Action</Typography.Title>
-                    <Steps direction="vertical" current={progress} status={status}>
-                        <Steps.Step title="Player Position" description="Which zone the player was in" />
-                        <Steps.Step title="Player Action" description="What action the player performed" />
-                        <Steps.Step title="Result Position" description="Which zone the shuttlecock moved to. (non-error only)" />
-                    </Steps>
-                    <>
-                    <Typography.Title level={5}>Current State</Typography.Title>
-                    {currTuple}
-                    </>
-                </Space>
+                <Col offset={2}>
+                    <Space direction="vertical">
+                        <Typography.Title>Serve</Typography.Title>
+                        <ServeButtons 
+                            setServeType={setServeType}
+                            setServePosition={setServePosition}
+                            setServeAttDirection={setServeAttDirection}
+                            setServeDefAction={setServeDefAction}
+                            setServeDefResult={setServeDefResult}
+                            processServe={processServe}
+                        />
+                    </Space>
+                    <Divider type="vertical"/>
+                    <Space direction="vertical">
+                        <Typography.Title>Action</Typography.Title>
+                        <Steps direction="vertical" current={progress} status={status}>
+                            <Steps.Step title="Player Position" description="Which zone the player was in" />
+                            <Steps.Step title="Player Action" description="What action the player performed" />
+                            <Steps.Step title="Result Position" description="Which zone the shuttlecock moved to. (non-error only)" />
+                        </Steps>
+                        <>
+                        <Typography.Title level={5}>Current State</Typography.Title>
+                        {currTuple}
+                        </>
+                    </Space>
+                </Col>
             </Row>
             <Divider/>
             <Row>
