@@ -6,7 +6,7 @@ import ScoreCounter from "./ScoreCounter"
 function ScoreBoard(props) {
     const { scoreOne, setScoreOne, scoreTwo, setScoreTwo } = props.scoreBoard
     return (
-        <Space direction="horizontal" size="large">
+        <Space direction="horizontal" size="large" style={{minWidth:300}}>
             <ScoreCounter score={scoreOne} setScore={setScoreOne}/>
             <Typography.Title level={5}>
                 Score
