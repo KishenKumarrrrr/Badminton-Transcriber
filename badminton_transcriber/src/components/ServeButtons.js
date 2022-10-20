@@ -14,12 +14,21 @@ function ServeButtons(props) {
             setIsAttack(true)
             setCurrStatus1("error")
             setCurrStatus2("error")
-        } else {
+        } else if (input === 's_def'){
             setIsAttack(false)
             setCurrStatus1("error")
             setCurrStatus3("error")
             setCurrStatus4("error")
         }
+    }
+
+    function addServe() {
+        props.processServe()
+        setCurrStatus1("error")
+        setCurrStatus2("error")
+        setCurrStatus3("error")
+        setCurrStatus4("error")
+
     }
 
     return (
@@ -126,7 +135,7 @@ function ServeButtons(props) {
                             </Select.Option>
                         </Select>
                         </>}
-                    <Button onClick={props.processServe}>Add Serve</Button>
+                    <Button onClick={addServe}>Add Serve</Button>
                 </Space>
             </Col>
         </Row>

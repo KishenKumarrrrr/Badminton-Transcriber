@@ -52,11 +52,13 @@ function Controls(props) {
             setPointState(`${pointState}${pointState === "" ? "" : ","}${serveAtTuple}`)
             clearTuple()
             message.success("Attacking serve added to point")
-        } else {
+        } else if (isValidDefServe) {
             const serveDefTuple = getServeDefState(servePosition, serveDefAction, serveDefResult)
             setPointState(`${pointState}${pointState === "" ? "" : ","}${serveDefTuple}`)
             clearTuple()
             message.success("Defending serve added to point")
+        } else {
+            message.error("No valid serve types detected. Please redo your selection")
         }
 
     }
