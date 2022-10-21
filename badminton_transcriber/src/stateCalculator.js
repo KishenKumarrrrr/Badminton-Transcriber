@@ -27,7 +27,7 @@ const DOWN_DEEP = 'dd'
 
 export function getState(playerPosition, action, resultPosition) {
     if (action === ERROR) {
-        return `(${playerPosition, action})`
+        return `(${playerPosition}, ${action})`
     }
     return `(${playerPosition}, ${getShotType(playerPosition, action, resultPosition)}, ${getResultPosition(resultPosition)})`
 }
