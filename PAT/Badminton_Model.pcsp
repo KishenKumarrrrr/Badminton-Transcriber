@@ -27,12 +27,27 @@ var lky_score = 0;
 var lak_score = 0;
 var won = na;
 var shuttle = 13; // Starting position at Error
+var lky_setscore = 0;
+var lak_setscore = 0;
 
 PlaySet = WhoServe1st; (Player1Serve [] Player2Serve);
 
+PlayGame = PlaySet; IncreaseSetScore ;
 WhoServe1st = []i:{lky_right_serve,lak_right_serve}@ TossCoin{turn = i} -> Skip;
 Player1Serve = [won == na && turn == lky_right_serve] LKYReady_right -> ply1_r_serve [] [won == na && turn == lky_left_serve] LKYReady_left -> ply1_l_serve;
 
+IncreaseSetScore = increaseScore {
+	lky_score = 0;
+	lak_score = 0;
+	if (won == player1) {
+		lky_setscore++
+	} else {
+		lak_setscore++;
+	}; won = na;
+	
+} -> CheckGameOver;
+
+CheckGameOver = [lky_setscore < 2 && lak_setscore < 2] PlayGame;
 ply1_l_serve = pcase {                             
 			1: Serve_narrow{shuttle=9} -> ply2_forehand_r  
 			1: Serve_wide{shuttle=9} -> ply2_backhand_r 
@@ -352,12 +367,21 @@ ply2_err = Player2_Error{
 	}
 } -> NextPt;
 
-#define player1Win won == player1;
-#define player2Win won == player2;
-#assert PlaySet reaches player1Win;
-#assert PlaySet reaches player2Win;
-#assert PlaySet reaches player1Win with pmin;
+#define player1WinSet won == player1;
+#define player2WinSet won == player2;
+
+#define player1WinGame lky_setscore == 2 ;
+#define player2WinGame lak_setscore == 2;
+#assert PlaySet reaches player1WinSet;
+#assert PlaySet reaches player2WinSet;
+#assert PlaySet reaches player1WinSet with pmin;
+#assert PlayGame reaches player1WinGame;
+#assert PlayGame reaches player2WinGame;
 
 // After error serve switches to opponent
 #assert PlaySet |= (Player1_Error -> []<>(LAKReady_left || LAKReady_right));
 #assert PlaySet |= (Player2_Error -> []<>(LKYReady_left || LKYReady_right));
+
+// only one player can win the whole game
+#assert PlayGame |= player1WinGame -> []!player2WinGame;
+#assert PlayGame |= player2WinGame -> []!player1WinGame;
