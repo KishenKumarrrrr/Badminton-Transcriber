@@ -371,6 +371,8 @@ ply2_err = Player2_Error{
 
 #define player1WinSet won == player1;
 #define player2WinSet won == player2;
+#define player1WinSetInLateGame won == player1 && lky_score - lak_score >= 2;
+#define player2WinSetInLateGame won == player2 && lak_score - lky_score >= 2;
 
 #define player1WinGame lky_setscore == 2 ;
 #define player2WinGame lak_setscore == 2;
@@ -378,6 +380,8 @@ ply2_err = Player2_Error{
 #assert PlaySet reaches player2WinSet;
 #assert PlaySet reaches player1WinSet with prob;
 #assert PlaySet reaches player2WinSet with prob;
+#assert PlaySet reaches player1WinSetInLateGame with prob;
+#assert PlaySet reaches player2WinSetInLateGame with prob;
 #assert PlayGame reaches player1WinGame;
 #assert PlayGame reaches player2WinGame;
 
