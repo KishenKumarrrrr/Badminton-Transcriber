@@ -391,3 +391,10 @@ ply2_err = Player2_Error{
 // Game should not terminate unless score is reached
 #define onGoingScore lky_score < 21 && lak_score < 21;
 #assert PlaySet |= [](onGoingScore -> !GameOver);
+
+
+#define lkyWinCond ((lky_score - lak_score) >= 2 || lky_score == 30);
+#assert PlaySet |= []player1WinGame -> lkyWinCond;
+
+#define lakWinCond ((lak_score - lky_score) >= 2 || lak_score == 30);
+#assert PlaySet |= []player2WinGame -> lakWinCond;
