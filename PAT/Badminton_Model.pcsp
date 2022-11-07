@@ -19,8 +19,7 @@
 // Player2: Lakshya
 //       *****
 
-enum {lky_left_serve, lky_right_serve, lak_left_serve, lak_right_serve}; //serve position: left court and right court
-enum {player1, player2, na};
+enum {lky_left_serve, lky_right_serve, lak_left_serve, lak_right_serve, player1, player2, na}; //serve position: left court and right court
 
 var turn = na; // serve turn;
 var lky_score = 0;
