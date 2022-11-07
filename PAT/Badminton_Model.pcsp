@@ -347,6 +347,7 @@ NextPt = Player1Serve [] Player2Serve [] ([won != na] GameOver -> Skip);
 
 ply1_err = Player1_Error{
 	lak_score++;
+	turn = na;
 	if(lak_score == 30 || (lak_score >= 21 && lak_score - lky_score >= 2)) {
     	won = player2
 	} else if(lak_score % 2 == 0) { // Even Score
@@ -358,6 +359,7 @@ ply1_err = Player1_Error{
 
 ply2_err = Player2_Error{
 	lky_score++;
+	turn = na;
 	if(lky_score == 30 || (lky_score >= 21 && lky_score - lak_score >= 2)) {
     	won = player1
 	} else if(lky_score % 2 == 0) { // Even Score
@@ -394,7 +396,11 @@ ply2_err = Player2_Error{
 
 
 #define lkyWinCond ((lky_score - lak_score) >= 2 || lky_score == 30);
-#assert PlaySet |= []player1WinGame -> lkyWinCond;
+#assert PlaySet |= player1WinGame -> []lkyWinCond;
 
 #define lakWinCond ((lak_score - lky_score) >= 2 || lak_score == 30);
-#assert PlaySet |= []player2WinGame -> lakWinCond;
+#assert PlaySet |= player2WinGame -> []lakWinCond;
+
+#define noWinner won == na;
+#assert Player1Serve |=  []noWinner;
+#assert Player2Serve |=  []noWinner;
