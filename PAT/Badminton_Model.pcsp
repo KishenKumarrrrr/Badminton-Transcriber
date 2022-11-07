@@ -29,6 +29,7 @@ var won = na;
 var shuttle = 13; // Starting position at Error
 var lky_setscore = 0;
 var lak_setscore = 0;
+var lky_shuttle_l = 0;
 
 PlaySet = WhoServe1st; (Player1Serve [] Player2Serve);
 
@@ -75,7 +76,7 @@ ply2_r_serve = pcase {
 			1: Serve_body{shuttle=4} -> (ply1_backhand_r [] ply1_forehand_r)
 			1: Serve_err{shuttle=13} -> ply2_err}; //Calculate score and serve system
 
-ply1_bl_stroke = pcase {                             
+ply1_bl_stroke = {lky_shuttle_l++} -> pcase {                             
 			20: FH_straight_back{shuttle=11} -> ply2_br_stroke
 			12: FH_straight_mid{shuttle=9} ->  ply2_mr_stroke
 			0 : FH_straight_front{shuttle=7} -> ply2_fr_stroke
@@ -90,7 +91,7 @@ ply1_bl_stroke = pcase {
             0 : BH_cross_front{shuttle=8}-> ply2_fl_stroke
 			3 : error{shuttle=13} -> ply1_err}; //Calculate score and serve system
 
-ply1_ml_stroke = pcase {                             
+ply1_ml_stroke = {lky_shuttle_l++} -> pcase {                             
 			12: FH_straight_back{shuttle=11} -> ply2_br_stroke
 			10: FH_straight_mid{shuttle=9} ->  ply2_mr_stroke
 			0 : FH_straight_front{shuttle=7} -> ply2_fr_stroke
@@ -105,7 +106,7 @@ ply1_ml_stroke = pcase {
             1 : BH_cross_front{shuttle=8}-> ply2_fl_stroke
 			7 : error{shuttle=13} -> ply1_err}; //Calculate score and serve system
 
-ply1_fl_stroke = pcase {                             
+ply1_fl_stroke = {lky_shuttle_l++} -> pcase {                             
 			1 : FH_straight_back{shuttle=11} -> ply2_br_stroke
 			2 : FH_straight_mid{shuttle=9} ->  ply2_mr_stroke
 			0 : FH_straight_front{shuttle=7} -> ply2_fr_stroke
@@ -120,7 +121,7 @@ ply1_fl_stroke = pcase {
             6 : BH_cross_front{shuttle=8}-> ply2_fl_stroke
 			1 : error{shuttle=13} -> ply1_err}; //Calculate score and serve system
 
-ply1_br_stroke = pcase {                             
+ply1_br_stroke = {lky_shuttle_l--} -> pcase {                             
 			9 : FH_straight_back{shuttle=12} -> ply2_bl_stroke
 			3 : FH_straight_mid{shuttle=10} ->  ply2_ml_stroke
 			1 : FH_straight_front{shuttle=8} -> ply2_fl_stroke
@@ -135,7 +136,7 @@ ply1_br_stroke = pcase {
             1: BH_cross_front{shuttle=7} -> ply2_fr_stroke
 			1: error{shuttle=13} -> ply1_err}; //Calculate score and serve system
 
-ply1_mr_stroke = pcase {                             
+ply1_mr_stroke = {lky_shuttle_l--} -> pcase {                             
 			33: FH_straight_back{shuttle=12} -> ply2_bl_stroke
 			15: FH_straight_mid{shuttle=10} ->  ply2_ml_stroke
 			8 : FH_straight_front{shuttle=8} -> ply2_fl_stroke
@@ -150,7 +151,7 @@ ply1_mr_stroke = pcase {
             0: BH_cross_front{shuttle=7} -> ply2_fr_stroke
 			19: error{shuttle=13} -> ply1_err}; //Calculate score and serve system
 
-ply1_fr_stroke = pcase {                             
+ply1_fr_stroke = {lky_shuttle_l--} -> pcase {                             
 			9 : FH_straight_back{shuttle=12} -> ply2_bl_stroke
 			4 : FH_straight_mid{shuttle=10} ->  ply2_ml_stroke
 			11: FH_straight_front{shuttle=8} -> ply2_fl_stroke
@@ -369,6 +370,7 @@ ply2_err = Player2_Error{
 
 #define player1WinSet won == player1;
 #define player2WinSet won == player2;
+#define player2WinAndShuttleGoLeft won == player2 && lky_shuttle_l > 0;
 
 #define player1WinGame lky_setscore == 2 ;
 #define player2WinGame lak_setscore == 2;
@@ -378,6 +380,8 @@ ply2_err = Player2_Error{
 #assert PlaySet reaches player2WinSet with prob;
 #assert PlayGame reaches player1WinGame;
 #assert PlayGame reaches player2WinGame;
+
+#assert PlaySet reaches player2WinAndShuttleGoLeft with prob;
 
 
 // After error serve switches to opponent
