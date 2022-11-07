@@ -378,6 +378,7 @@ ply2_err = Player2_Error{
 #assert PlayGame reaches player1WinGame;
 #assert PlayGame reaches player2WinGame;
 
+
 // After error serve switches to opponent
 #assert PlaySet |= [](Player1_Error -> X (LAKReady_left || LAKReady_right || GameOver));
 #assert PlaySet |= [](Player2_Error -> X (LKYReady_left || LKYReady_right || GameOver));
@@ -385,3 +386,7 @@ ply2_err = Player2_Error{
 // only one player can win the whole game
 #assert PlayGame |= player1WinGame -> []!player2WinGame;
 #assert PlayGame |= player2WinGame -> []!player1WinGame;
+
+// Game should not terminate unless score is reached
+#define onGoingScore lky_score < 21 && lak_score < 21;
+#assert PlaySet |= [](onGoingScore -> !GameOver);
