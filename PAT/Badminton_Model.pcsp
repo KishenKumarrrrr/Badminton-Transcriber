@@ -379,8 +379,8 @@ ply2_err = Player2_Error{
 #assert PlayGame reaches player2WinGame;
 
 // After error serve switches to opponent
-#assert PlaySet |= (Player1_Error -> []<>(LAKReady_left || LAKReady_right));
-#assert PlaySet |= (Player2_Error -> []<>(LKYReady_left || LKYReady_right));
+#assert PlaySet |= [](Player1_Error -> X (LAKReady_left || LAKReady_right || GameOver));
+#assert PlaySet |= [](Player2_Error -> X (LKYReady_left || LKYReady_right || GameOver));
 
 // only one player can win the whole game
 #assert PlayGame |= player1WinGame -> []!player2WinGame;
