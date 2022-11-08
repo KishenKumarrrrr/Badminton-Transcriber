@@ -389,9 +389,10 @@ ply2_err = Player2_Error{
 #assert PlaySet |= [](Player1_Error -> X (LAKReady_left || LAKReady_right || GameOver));
 #assert PlaySet |= [](Player2_Error -> X (LKYReady_left || LKYReady_right || GameOver));
 
+
 // only one player can win the whole game
-#assert PlayGame |= player1WinGame -> []!player2WinGame;
-#assert PlayGame |= player2WinGame -> []!player1WinGame;
+#assert PlayGame |= player1WinGame -> X!player2WinGame;
+#assert PlayGame |= player2WinGame -> X!player1WinGame;
 
 // Game should not terminate unless score is reached
 #define onGoingScore lky_score < 21 && lak_score < 21;
@@ -407,3 +408,23 @@ ply2_err = Player2_Error{
 #define noWinner won == na;
 #assert Player1Serve |=  []noWinner;
 #assert Player2Serve |=  []noWinner;
+
+
+#define lak_right_serve_cond lak_score % 2 == 0;
+#define lky_right_serve_cond lky_score % 2 == 0;
+
+
+
+#assert PlaySet |= [](LKYReady_left -> X!lky_right_serve_cond);
+#assert PlaySet |= [](LKYReady_right ->X lky_right_serve_cond);
+
+
+#assert PlaySet |= [](LAKReady_left -> X!lak_right_serve_cond);
+#assert PlaySet |= [](LAKReady_right ->X lak_right_serve_cond);
+
+#assert PlaySet |= []!(LKYReady_left -> X lky_right_serve_cond);
+#assert PlaySet |= []!(LKYReady_right ->X !lky_right_serve_cond);
+
+
+#assert PlaySet |= []!(LAKReady_left -> X lak_right_serve_cond);
+#assert PlaySet |= []!(LAKReady_right ->X !lak_right_serve_cond);
