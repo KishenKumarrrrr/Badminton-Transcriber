@@ -368,23 +368,8 @@ ply2_err = Player2_Error{
 	}
 } -> NextPt;
 
-// Single Set
-#define player1WinSet won == player1;
-#define player2WinSet won == player2;
-#assert PlaySet reaches player1WinSet with prob;    // [0.37017, 0.56344]
-#assert PlaySet reaches player2WinSet with prob;    // [0.43654, 0.6298]
 
-// Single Set Late Game
-#define player1WinSetInLateGame won == player1 && lky_score - lak_score <= 2;
-#define player2WinSetInLateGame won == player2 && lak_score - lky_score <= 2;
-#assert PlaySet reaches player1WinSetInLateGame with prob;    // [0.36993, 0.56328]
-#assert PlaySet reaches player2WinSetInLateGame with prob;    // [0.43641, 0.62955]
-
-// Full Game
-#define player1WinGame lky_setscore == 2;
-#define player2WinGame lak_setscore == 2;
-#assert PlayGame reaches player1WinGame;    // [0.30964, 0.59465]
-#assert PlayGame reaches player2WinGame;    // [0.40531, 0.69031]
+// Checking for correctness of model
 
 // After error serve switches to opponent
 #assert PlaySet |= [](Player1_Error -> X (LAKReady_left || LAKReady_right || GameOver));
@@ -417,3 +402,16 @@ ply2_err = Player2_Error{
 #assert PlaySet |= [](LAKReady_left -> X!lak_right_serve_cond);
 #assert PlaySet |= [](LAKReady_right ->X lak_right_serve_cond);
 
+
+//Probability of outcomes
+// Single Set
+#define player1WinSet won == player1;
+#define player2WinSet won == player2;
+#assert PlaySet reaches player1WinSet with prob;    // [0.37017, 0.56344]
+#assert PlaySet reaches player2WinSet with prob;    // [0.43654, 0.6298]
+
+// Full Game
+#define player1WinGame lky_setscore == 2;
+#define player2WinGame lak_setscore == 2;
+#assert PlayGame reaches player1WinGame;    // [0.30964, 0.59465]
+#assert PlayGame reaches player2WinGame;    // [0.40531, 0.69031]
