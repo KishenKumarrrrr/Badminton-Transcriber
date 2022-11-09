@@ -375,8 +375,12 @@ ply2_err = Player2_Error{
 #assert PlayGame deadlockfree;
 //Game should end with a high probability close to 1
 #define GameEnded won != na;
+#define matchOver lky_setscore ==2 || lak_setscore == 2;
 #assert PlaySet reaches GameEnded with prob;
+#assert PlayGame reaches matchOver with prob;
 
+#define scoreOverFlow lky_setscore ==2 || lak_setscore == 3;
+#assert PlayGame reaches scoreOverFlow;
 
 // After error serve switches to opponent
 #assert PlaySet |= [](Player1_Error -> X (LAKReady_left || LAKReady_right || GameOver));
