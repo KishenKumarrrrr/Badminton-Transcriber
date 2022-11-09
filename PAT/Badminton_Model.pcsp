@@ -379,7 +379,7 @@ ply2_err = Player2_Error{
 #assert PlaySet reaches GameEnded with prob;
 #assert PlayGame reaches matchOver with prob;
 
-#define scoreOverFlow lky_setscore ==2 || lak_setscore == 3;
+#define scoreOverFlow lky_setscore == 3 || lak_setscore == 3;
 #assert PlayGame reaches scoreOverFlow;
 
 // After error serve switches to opponent
