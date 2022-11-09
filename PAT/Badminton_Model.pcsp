@@ -377,8 +377,8 @@ ply2_err = Player2_Error{
 #assert PlaySet reaches player2WinSet with prob;    // [0.43654, 0.6298]
 
 // Single Set Late Game
-#define player1WinSetInLateGame won == player1 && lky_score - lak_score >= 2;
-#define player2WinSetInLateGame won == player2 && lak_score - lky_score >= 2;
+#define player1WinSetInLateGame won == player1 && lky_score - lak_score <= 2;
+#define player2WinSetInLateGame won == player2 && lak_score - lky_score <= 2;
 #assert PlaySet reaches player1WinSetInLateGame with prob;    // [0.36993, 0.56328]
 #assert PlaySet reaches player2WinSetInLateGame with prob;    // [0.43641, 0.62955]
 
