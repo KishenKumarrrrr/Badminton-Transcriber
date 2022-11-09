@@ -47,19 +47,18 @@ IncreaseSetScore = increaseScore {
 	
 } -> CheckGameOver;
 
-CheckGameOver = [lky_setscore < 2 && lak_setscore < 2] PlayGame [] Skip;
+CheckGameOver = [lky_setscore < 2 && lak_setscore < 2] PlayGame [] [lky_setscore == 2 || lak_setscore == 2 ]Skip;
 ply1_l_serve = pcase {                             
 			5 : Serve_narrow{shuttle=9} -> ply2_forehand_r
 			1 : Serve_wide{shuttle=9} -> ply2_backhand_r
 			12: Serve_body{shuttle=9} -> (ply2_backhand_r [] ply2_forehand_r)
 			0 : Serve_err{shuttle=13} -> ply1_err}; //Calculate score and serve system
 
-
 ply1_r_serve = pcase {                             
 			3 : Serve_narrow{shuttle=10} -> ply2_forehand_r
 			4 : Serve_wide{shuttle=10} -> ply2_backhand_r
 			13: Serve_body{shuttle=10} -> (ply2_backhand_r [] ply2_forehand_r)
-			1 : Serve_err{shuttle=13} -> ply1_err}; //Calculate score and serve system
+			1 : Serve_err{shuttle=13} -> RightServeError -> ply1_err}; //Calculate score and serve system
 
 Player2Serve = [won == na && turn == lak_right_serve] LAKReady_right -> ply2_r_serve [] [won == na && turn == lak_left_serve] LAKReady_left -> ply2_l_serve;
 
@@ -88,7 +87,7 @@ ply1_bl_stroke = pcase {
             0 : BH_cross_back{shuttle=12} -> ply2_bl_stroke
             1 : BH_cross_mid{shuttle=10} -> ply2_ml_stroke
             0 : BH_cross_front{shuttle=8}-> ply2_fl_stroke
-			3 : error{shuttle=13} -> ply1_err}; //Calculate score and serve system
+			3 : error{shuttle=13} -> BackLeftError -> ply1_err}; //Calculate score and serve system
 
 ply1_ml_stroke = pcase {                             
 			12: FH_straight_back{shuttle=11} -> ply2_br_stroke
@@ -103,7 +102,7 @@ ply1_ml_stroke = pcase {
             20: BH_cross_back{shuttle=12} -> ply2_bl_stroke
             11: BH_cross_mid{shuttle=10} -> ply2_ml_stroke
             1 : BH_cross_front{shuttle=8}-> ply2_fl_stroke
-			7 : error{shuttle=13} -> ply1_err}; //Calculate score and serve system
+			7 : error{shuttle=13} -> MidLeftError -> ply1_err}; //Calculate score and serve system
 
 ply1_fl_stroke = pcase {                             
 			1 : FH_straight_back{shuttle=11} -> ply2_br_stroke
@@ -118,7 +117,7 @@ ply1_fl_stroke = pcase {
             11: BH_cross_back{shuttle=12} -> ply2_bl_stroke
             3 : BH_cross_mid{shuttle=10} -> ply2_ml_stroke
             6 : BH_cross_front{shuttle=8}-> ply2_fl_stroke
-			1 : error{shuttle=13} -> ply1_err}; //Calculate score and serve system
+			1 : error{shuttle=13} -> FrontLeftError -> ply1_err}; //Calculate score and serve system
 
 ply1_br_stroke = pcase {                             
 			9 : FH_straight_back{shuttle=12} -> ply2_bl_stroke
@@ -133,7 +132,7 @@ ply1_br_stroke = pcase {
             0 : BH_cross_back{shuttle=11} -> ply2_br_stroke
             1 : BH_cross_mid{shuttle=9} -> ply2_mr_stroke
             1: BH_cross_front{shuttle=7} -> ply2_fr_stroke
-			1: error{shuttle=13} -> ply1_err}; //Calculate score and serve system
+			1: error{shuttle=13} -> BackRightError -> ply1_err}; //Calculate score and serve system
 
 ply1_mr_stroke = pcase {                             
 			33: FH_straight_back{shuttle=12} -> ply2_bl_stroke
@@ -148,7 +147,7 @@ ply1_mr_stroke = pcase {
             1 : BH_cross_back{shuttle=11} -> ply2_br_stroke
             0: BH_cross_mid{shuttle=9} -> ply2_mr_stroke
             0: BH_cross_front{shuttle=7} -> ply2_fr_stroke
-			19: error{shuttle=13} -> ply1_err}; //Calculate score and serve system
+			19: error{shuttle=13} -> MidRightError -> ply1_err}; //Calculate score and serve system
 
 ply1_fr_stroke = pcase {                             
 			9 : FH_straight_back{shuttle=12} -> ply2_bl_stroke
@@ -163,7 +162,7 @@ ply1_fr_stroke = pcase {
             0 : BH_cross_back{shuttle=11} -> ply2_br_stroke
             0 : BH_cross_mid{shuttle=9} -> ply2_mr_stroke
             1 : BH_cross_front{shuttle=7} -> ply2_fr_stroke
-			4 : error{shuttle=13} -> ply1_err}; //Calculate score and serve system
+			4 : error{shuttle=13} -> FrontRightError -> ply1_err}; //Calculate score and serve system
 
 ply2_bl_stroke = pcase {                             
 			5: FH_straight_back{shuttle=2} -> ply1_br_stroke
@@ -370,11 +369,15 @@ ply2_err = Player2_Error{
 } -> NextPt;
 
 
-// Checking for correctness of model
-
-
+// Checking correctness of Model
+//Deadlock free
 #assert PlaySet deadlockfree;
 #assert PlayGame deadlockfree;
+//Game should end with a high probability close to 1
+#define GameEnded won != na;
+#assert PlaySet reaches GameEnded with prob;
+
+
 // After error serve switches to opponent
 #assert PlaySet |= [](Player1_Error -> X (LAKReady_left || LAKReady_right || GameOver));
 #assert PlaySet |= [](Player2_Error -> X (LKYReady_left || LKYReady_right || GameOver));
@@ -419,4 +422,13 @@ ply2_err = Player2_Error{
 #define player2WinGame lak_setscore == 2;
 #assert PlayGame reaches player1WinGame;    // [0.30964, 0.59465]
 #assert PlayGame reaches player2WinGame;    // [0.40531, 0.69031]
+
+// Relative probability of making an error from given position
+#assert PlaySet |= <>RightServeError with prob;    // [0.34341, 0.38983]
+#assert PlaySet |= <>BackLeftError with prob;      // [0.6872, 0.74006]
+#assert PlaySet |= <>MidLeftError with prob;       // [0.98182, 0.98909]
+#assert PlaySet |= <>FrontLeftError with prob;     // [0.22827, 0.31517]
+#assert PlaySet |= <>BackRightError with prob;     // [0.4574, 0.52776]
+#assert PlaySet |= <>MidRightError with prob;      // [0.99989, 0.99996]
+#assert PlaySet |= <>FrontRightError with prob;    // [0.54133, 0.63184]
 
