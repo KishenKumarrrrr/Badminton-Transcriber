@@ -368,9 +368,13 @@ ply2_err = Player2_Error{
 	}
 } -> NextPt;
 
+<<<<<<< HEAD
 
 // Checking for correctness of model
 
+=======
+// Checking correctness of Model
+>>>>>>> 30bf9b7fbe64606c5adbb6c85196a04cb374a9e5
 // After error serve switches to opponent
 #assert PlaySet |= [](Player1_Error -> X (LAKReady_left || LAKReady_right || GameOver));
 #assert PlaySet |= [](Player2_Error -> X (LKYReady_left || LKYReady_right || GameOver));
@@ -389,10 +393,9 @@ ply2_err = Player2_Error{
 #assert PlaySet |= player1WinGame -> []lkyWinCond;
 #assert PlaySet |= player2WinGame -> []lakWinCond;
 
-//check that if someone serve no one is a winners
+// Check that if someone serve no one is a winners
 #define noWinner won == na;
 #assert PlaySet |= []((LKYReady_left || LKYReady_right || LAKReady_left || LAKReady_right) -> X noWinner);
-
 
 //check that a right serve and left serve is compliant with the score
 #define lak_right_serve_cond lak_score % 2 == 0;
@@ -402,8 +405,12 @@ ply2_err = Player2_Error{
 #assert PlaySet |= [](LAKReady_left -> X!lak_right_serve_cond);
 #assert PlaySet |= [](LAKReady_right ->X lak_right_serve_cond);
 
+<<<<<<< HEAD
 
 //Probability of outcomes
+=======
+// Reachability Analysis
+>>>>>>> 30bf9b7fbe64606c5adbb6c85196a04cb374a9e5
 // Single Set
 #define player1WinSet won == player1;
 #define player2WinSet won == player2;
@@ -414,4 +421,10 @@ ply2_err = Player2_Error{
 #define player1WinGame lky_setscore == 2;
 #define player2WinGame lak_setscore == 2;
 #assert PlayGame reaches player1WinGame;    // [0.30964, 0.59465]
+<<<<<<< HEAD
 #assert PlayGame reaches player2WinGame;    // [0.40531, 0.69031]
+=======
+#assert PlayGame reaches player2WinGame;    // [0.40531, 0.69031]
+
+
+>>>>>>> 30bf9b7fbe64606c5adbb6c85196a04cb374a9e5
