@@ -412,25 +412,16 @@ ply2_err = Player2_Error{
 #assert PlaySet reaches lkyLeftFail with prob;
 #assert PlaySet reaches lkyRightFail with prob;
 
+//check that if someone serve no one is a winners
 #define noWinner won == na;
-#assert Player1Serve |= []noWinner;
-#assert Player2Serve |= []noWinner;
+#assert PlaySet |= []((LKYReady_left || LKYReady_right || LAKReady_left || LAKReady_right) -> X noWinner);
 
 
+//check that a right serve and left serve is compliant with the score
 #define lak_right_serve_cond lak_score % 2 == 0;
 #define lky_right_serve_cond lky_score % 2 == 0;
-
 #assert PlaySet |= [](LKYReady_left -> X!lky_right_serve_cond);
 #assert PlaySet |= [](LKYReady_right ->X lky_right_serve_cond);
-
-
 #assert PlaySet |= [](LAKReady_left -> X!lak_right_serve_cond);
 #assert PlaySet |= [](LAKReady_right ->X lak_right_serve_cond);
-
-#assert PlaySet |= []!(LKYReady_left -> X lky_right_serve_cond);
-#assert PlaySet |= []!(LKYReady_right ->X !lky_right_serve_cond);
-
-
-#assert PlaySet |= []!(LAKReady_left -> X lak_right_serve_cond);
-#assert PlaySet |= []!(LAKReady_right ->X !lak_right_serve_cond);
 
