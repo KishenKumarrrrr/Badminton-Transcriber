@@ -368,6 +368,13 @@ ply2_err = Player2_Error{
 } -> NextPt;
 
 // Checking correctness of Model
+//Deadlock free
+#assert PlaySet deadlockfree;
+
+//Game should end with a high probability close to 1
+#define GameEnded won != na;
+#assert PlaySet reaches GameEnded with prob;
+
 // After error serve switches to opponent
 #assert PlaySet |= [](Player1_Error -> X (LAKReady_left || LAKReady_right || GameOver));
 #assert PlaySet |= [](Player2_Error -> X (LKYReady_left || LKYReady_right || GameOver));
